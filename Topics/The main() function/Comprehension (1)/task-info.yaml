@@ -1,0 +1,24 @@
+type: choice
+is_multiple_choice: false
+options:
+  - text: a place marked with the /* start */ comment
+  - text: the start of file
+  - text: the string specified in program arguments
+  - text: start() function
+  - text: main() function
+  - text: Main() function
+files:
+  - name: src/Main.kt
+    visible: true
+    text: |
+      // You can experiment here, it won’t be checked
+      
+      fun main(args: Array<String>) {
+        // put your code here
+      }
+    learner_created: false
+feedback_link: https://hyperskill.org/learn/step/10485#comment
+status: Solved
+record: -1
+custom_name: Comprehension
+local_check: false

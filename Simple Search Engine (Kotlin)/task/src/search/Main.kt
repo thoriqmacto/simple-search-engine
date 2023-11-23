@@ -24,7 +24,7 @@ fun main() {
         peopleList.add(addedPeople)
     }
 //    printAllPeople(peopleList)
-    val menuArray = arrayOf(0,1,2)
+    val menuArray = intArrayOf(0,1,2)
     printMenu()
     var menuChosen = readln().toInt()
 
