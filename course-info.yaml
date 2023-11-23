@@ -8,5 +8,6 @@ summary: "<p>In this project you will create your own search engine, though it p
   >https://hyperskill.org/projects/89</a>"
 programming_language: Kotlin
 content:
-- Simple Search Engine (Kotlin)
+  - Simple Search Engine (Kotlin)
+  - Topics
 mode: Study
