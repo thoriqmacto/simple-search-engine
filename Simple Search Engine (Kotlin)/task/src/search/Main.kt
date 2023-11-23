@@ -24,17 +24,44 @@ fun main() {
         peopleList.add(addedPeople)
     }
 //    printAllPeople(peopleList)
-    println("Enter the number of search queries:")
-    val numOfQueries = readln().toInt()
-    repeat(numOfQueries){
-        println("Enter data to search people:")
-        val peopleString = readln()
-        searchPeople(peopleList,peopleString)
+    val menuArray = arrayOf(0,1,2)
+    printMenu()
+    var menuChosen = readln().toInt()
+
+    while (menuChosen != 0){
+        if (menuArray.contains(menuChosen)) {
+            if (menuChosen == 1) {
+                println("Enter a name or email to search all suitable people.")
+                val peopleString = readln()
+                searchPeople(peopleList,peopleString)
+
+                printMenu()
+                menuChosen= readln().toInt()
+            }else if(menuChosen == 2){
+                printAllPeople(peopleList)
+
+                printMenu()
+                menuChosen= readln().toInt()
+            }
+        }else{
+            println("Incorrect option! Try again.")
+            printMenu()
+            menuChosen = readln().toInt()
+        }
     }
+    println("Bye!")
 }
 
 fun printAllPeople(peopleList:MutableList<String>){
+    println("=== List of people ===")
     peopleList.forEach { println(it) }
+}
+
+fun printMenu(){
+    println("=== Menu ===")
+    println("1. Find a person")
+    println("2. Print all people")
+    println("0. Exit")
 }
 
 fun searchPeople(peopleList: MutableList<String>, stringToFind:String){
@@ -48,7 +75,7 @@ fun searchPeople(peopleList: MutableList<String>, stringToFind:String){
     }
 
     if(foundName.isNotEmpty()){
-        println("People found:")
+//        println("People found:")
         printAllPeople(foundName)
     }else{
         println{"No matching people found."}
