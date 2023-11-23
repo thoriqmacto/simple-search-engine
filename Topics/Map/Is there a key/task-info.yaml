@@ -1,0 +1,18 @@
+type: code
+custom_name: Is there a key?
+files:
+  - name: src/Main.kt
+    visible: true
+    highlight_level: NONE
+    text: |-
+      fun containsKeyAndValue(map: Map<String, String>, value: String): Boolean {
+          // put your code here
+      }
+    learner_created: false
+feedback_link: https://hyperskill.org/learn/step/12664#comment
+status: Solved
+feedback:
+  message: <html>Correct solution</html>
+  time: "Thu, 23 Nov 2023 18:42:52 UTC"
+record: -1
+submission_language: kotlin
