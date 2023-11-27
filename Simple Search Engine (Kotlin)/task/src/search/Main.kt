@@ -27,8 +27,36 @@ fun main(args:Array<String>) {
 //    printAllPeople(peopleList)
     if (args[0] == "--data"){
         val fileName = args[1]
-        if(File(fileName).exists()) {
-            val peopleList = File(fileName).readLines().toMutableList()
+        val file = File(fileName)
+        if(file.exists()) {
+            val peopleList = file.readLines().toMutableList()
+//            val peopleList = mutableListOf<String>()
+
+            // for text containing ":"
+//            file.forEachLine{
+//                val parts = it.split(":")
+//                peopleList.add(parts[1])
+//            }
+
+
+
+//            peopleList.forEach { println() }
+
+            val invertedIndex = mutableMapOf<String,MutableList<Int>>()
+
+            peopleList.forEach { list ->
+                val words = list.split(" ").map{it.lowercase()}.toSet()
+                words.forEach { word ->
+                    if(invertedIndex.containsKey(word)){
+                        invertedIndex[word]?.add(peopleList.indexOf(list))
+                    }else {
+                        invertedIndex[word] = mutableListOf(peopleList.indexOf(list))
+                    }
+                }
+            }
+
+//            invertedIndex.forEach { println(it) }
+
             val menuArray = intArrayOf(0,1,2)
             printMenu()
             var menuChosen = readln().toInt()
@@ -37,8 +65,19 @@ fun main(args:Array<String>) {
                 if (menuArray.contains(menuChosen)) {
                     if (menuChosen == 1) {
                         println("Enter a name or email to search all suitable people.")
-                        val peopleString = readln()
-                        searchPeople(peopleList,peopleString)
+                        val peopleString = readln().lowercase()
+//                        searchPeople(peopleList,peopleString)
+                        val totalFound = invertedIndex[peopleString]?.size?:0
+
+                        when(totalFound){
+                            0 -> println("No matching people found.")
+                            1 -> println("$totalFound person found:")
+                            else -> println("$totalFound persons found:")
+                        }
+
+                        if (totalFound >0) {
+                            invertedIndex[peopleString]?.forEach { println(peopleList[it]) }
+                        }
 
                         printMenu()
                         menuChosen= readln().toInt()

@@ -3,7 +3,7 @@ hyperskill_project:
   ide_files: https://stepik.org/media/attachments/lesson/271583/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: "Thu, 23 Nov 2023 15:37:43 UTC"
+update_date: "Mon, 27 Nov 2023 07:39:02 UTC"
 stages:
   - id: 494
     step: 7817
@@ -19,7 +19,7 @@ stages:
     is_completed: true
   - id: 498
     step: 7821
-    is_completed: false
+    is_completed: true
   - id: 499
     step: 7822
     is_completed: false
@@ -138,12 +138,12 @@ topics:
       theory_id: 4564
     - title: String arrays
       theory_id: 11477
-    - title: The main() function
-      theory_id: 10484
     - title: Files
       theory_id: 13025
     - title: Reading files
       theory_id: 6351
+    - title: The main() function
+      theory_id: 10484
     - title: IntelliJ IDEA run configurations
       theory_id: 10630
     - title: Exception
