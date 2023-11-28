@@ -38,8 +38,6 @@ fun main(args:Array<String>) {
 //                peopleList.add(parts[1])
 //            }
 
-
-
 //            peopleList.forEach { println() }
 
             val invertedIndex = mutableMapOf<String,MutableList<Int>>()
