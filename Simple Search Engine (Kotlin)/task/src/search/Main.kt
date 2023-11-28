@@ -2,44 +2,11 @@ package search
 import java.io.File
 
 fun main(args:Array<String>) {
-//    val sentence = readln()
-//    val word = readln()
-//    val listWord = sentence.split(" ")
-//
-//    var wordPosition = 0
-//
-//    for (w in listWord){
-//        if (word == w){
-//            wordPosition = listWord.indexOf(w) + 1
-//            break
-//        }
-//    }
-//
-//    println(if (wordPosition != 0) wordPosition else "Not found")
-//    println("Enter the number of people:")
-//    val numOfPeople = readln().toInt()
-//    println("Enter all people:")
-//    val peopleList = mutableListOf<String>()
-//    repeat(numOfPeople){
-//        val addedPeople = readln()
-//        peopleList.add(addedPeople)
-//    }
-//    printAllPeople(peopleList)
     if (args[0] == "--data"){
         val fileName = args[1]
         val file = File(fileName)
         if(file.exists()) {
             val peopleList = file.readLines().toMutableList()
-//            val peopleList = mutableListOf<String>()
-
-            // for text containing ":"
-//            file.forEachLine{
-//                val parts = it.split(":")
-//                peopleList.add(parts[1])
-//            }
-
-//            peopleList.forEach { println() }
-
             val invertedIndex = mutableMapOf<String,MutableList<Int>>()
 
             peopleList.forEach { list ->
@@ -53,7 +20,7 @@ fun main(args:Array<String>) {
                 }
             }
 
-//            invertedIndex.forEach { println(it) }
+            // invertedIndex.forEach { println(it) }
 
             val menuArray = intArrayOf(0,1,2)
             printMenu()
@@ -62,19 +29,33 @@ fun main(args:Array<String>) {
             while (menuChosen != 0){
                 if (menuArray.contains(menuChosen)) {
                     if (menuChosen == 1) {
-                        println("Enter a name or email to search all suitable people.")
-                        val peopleString = readln().lowercase()
-//                        searchPeople(peopleList,peopleString)
-                        val totalFound = invertedIndex[peopleString]?.size?:0
+                        println("Select a matching strategy: ALL, ANY, NONE")
+                        var strategyInput = readln().uppercase()
 
-                        when(totalFound){
-                            0 -> println("No matching people found.")
-                            1 -> println("$totalFound person found:")
-                            else -> println("$totalFound persons found:")
+                        var strategy:Strategy = when(strategyInput){
+                            "ALL" -> Strategy.ALL
+                            "ANY" -> Strategy.ANY
+                            "NONE" -> Strategy.NONE
+                            else -> {Strategy.NULL}
                         }
 
-                        if (totalFound >0) {
-                            invertedIndex[peopleString]?.forEach { println(peopleList[it]) }
+                        while(strategy == Strategy.NULL){
+                            println("Your strategy not listed. Please choose again.")
+                            println("Select a matching strategy: ALL, ANY, NONE")
+                            strategyInput = readln().uppercase()
+                            strategy = when(strategyInput){
+                                "ALL" -> Strategy.ALL
+                                "ANY" -> Strategy.ANY
+                                "NONE" -> Strategy.NONE
+                                else -> {Strategy.NULL}
+                            }
+                        }
+
+                        println("Enter a name or email to search all suitable people.")
+                        val searchString = readln().split(" ").map{ it.lowercase() }.toSet()
+                        val resultLine = searchResult(invertedIndex,strategy,searchString)
+                        if(resultLine.size != 0){
+                            resultLine.forEach { println(peopleList[it]) }
                         }
 
                         printMenu()
@@ -98,6 +79,61 @@ fun main(args:Array<String>) {
     }
 }
 
+enum class Strategy {
+    ALL,ANY,NONE,NULL;
+
+//    fun isValid(strInput:String): Boolean {
+//        for (enum in Strategy.values()){
+//            if(strInput.uppercase() == enum.name) return true
+//        }
+//        return false
+//    }
+}
+
+fun searchResult(inputInvertedIndex:MutableMap<String,MutableList<Int>>, inputStrategy:Strategy,
+                 searchString:Set<String>):MutableList<Int>{
+    var resultLine = mutableListOf<Int>()
+
+    when (inputStrategy.name) {
+        "ALL" -> {
+            resultLine.addAll(inputInvertedIndex[searchString.first()]?: emptyList())
+            for (str in searchString.drop(1)){
+                resultLine.retainAll(inputInvertedIndex[str]?: emptyList())
+            }
+        }
+        "ANY" -> {
+            searchString.forEach { it1 ->
+                inputInvertedIndex[it1]?.forEach { it2 ->
+                    resultLine.add(it2)
+                }
+            }
+        }
+        "NONE" -> {
+            val excludedValues = mutableListOf<Int>()
+            searchString.forEach { str ->
+                inputInvertedIndex[str]?.forEach {excludedValues.add(it)}
+            }
+
+            val excludedInvertedIndex = inputInvertedIndex.filterValues { lines ->
+                lines.any { it !in excludedValues}
+            }
+            resultLine = excludedInvertedIndex.values.flatten().distinct().toMutableList()
+//            println(inputInvertedIndex)
+//            println(excludedValues)
+//            println("Search String: $searchString")
+//            println(resultLine)
+        }
+    }
+
+    when(val totalFound = resultLine.size){
+        0 -> println("No matching people found.")
+        1 -> println("$totalFound person found:")
+        else -> println("$totalFound persons found:")
+    }
+
+    return resultLine
+}
+
 fun printAllPeople(peopleList:MutableList<String>){
     println("=== List of people ===")
     peopleList.forEach { println(it) }
@@ -108,22 +144,4 @@ fun printMenu(){
     println("1. Find a person")
     println("2. Print all people")
     println("0. Exit")
-}
-
-fun searchPeople(peopleList: MutableList<String>, stringToFind:String){
-    val foundName = mutableListOf<String>()
-
-    peopleList.forEach {
-        person ->
-        if (person.contains(stringToFind, ignoreCase = true)){
-            foundName.add(person)
-        }
-    }
-
-    if(foundName.isNotEmpty()){
-//        println("People found:")
-        printAllPeople(foundName)
-    }else{
-        println{"No matching people found."}
-    }
 }
